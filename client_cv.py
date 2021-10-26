@@ -29,6 +29,7 @@ class StreamAnalyzer:
         self.stream_url = stream_url
         self.video_log: pd.DataFrame = pd.DataFrame(columns=self.COLUMN_NAMES)
 
+
     def get_stream_record_frames(self, limit_frames: int=None) -> None:
         """
         This function captures the network stream and records the information it receives into the video log
@@ -45,30 +46,37 @@ class StreamAnalyzer:
             ret, frame = video_capture.read()
             if frame is None:
                 break
-            original_val, pts, st_code = qr_decoder.detectAndDecode(frame)
-            frames_received_counter += 1
-            values = original_val.replace("'", '"')
-            try:
-                values = json.loads(values)
-            except json.decoder.JSONDecodeError:
-                # print("Failed to decode frame")
-                # cv2.imshow(f"Test_window_{frames_recorded_counter}", frame)
-                cv2.waitKey(wait_ms)
-                continue
-            frame_number = values['frame_number']
-            time_generated = values['time']
-            time_received = time.time()
-            random = values['random']
-            new_row = pd.DataFrame(columns=self.COLUMN_NAMES, data=[[frame_number, frames_recorded_counter, frames_received_counter, time_generated, time_received, random]])
-            self.video_log: pd.DataFrame = self.video_log.append(new_row)
+            # original_val, pts, st_code = qr_decoder.detectAndDecode(frame)
+            # # frames_received_counter += 1
+            # # values = original_val.replace("'", '"')
+            # # try:
+            # #     values = json.loads(values)
+            # # except json.decoder.JSONDecodeError:
+            # #     # print("Failed to decode frame")
+            # #     # cv2.imshow(f"Test_window_{frames_recorded_counter}", frame)
+            # #     cv2.waitKey(wait_ms)
+            # #     continue
+            # # frame_number = values['frame_number']
+            # time_generated = values['time']
+            # time_received = time.time() *1000
+            # random = values['random']
+            # # new_row = pd.DataFrame(columns=self.COLUMN_NAMES, data=[[frame_number, frames_recorded_counter, frames_received_counter, time_generated, time_received, random]])
+            # self.video_log: pd.DataFrame = self.video_log.append(new_row)
             frames_recorded_counter += 1
             if limit_frames is not None and frames_recorded_counter > limit_frames:
                 print("Ending frames recording")
                 break
             print(f"Count frames recorded: {frames_recorded_counter}")
             end_loop = time.time()
-            wait_time = wait_ms - (end_loop - start_loop)
-            cv2.waitKey(int(wait_time))
+            difference = (end_loop - start_loop) * 1000
+            wait_time = wait_ms - difference
+            wait = True
+            if difference > wait_ms:
+                wait = False
+            print(f"Difference: {difference}")
+            print(f"Wait time: {wait_time}")
+            if wait:
+                cv2.waitKey(int(wait_time))
 
     def analyze_stream(self) -> None:
         """
@@ -81,7 +89,7 @@ class StreamAnalyzer:
         """
         self.video_log['time_difference'] = self.video_log['time_received'] - self.video_log['time_generated']
         self.video_log['difference_between_frame_times'] = self.video_log['time_received'].rolling(2).apply(lambda x: x.iloc[1] - x.iloc[0])
-        self.video_log['calculated_fps'] = 1000 / (self.video_log['difference_between_frame_times'] * 1000)
+        self.video_log['calculated_fps'] = 1 / (self.video_log['difference_between_frame_times'] )
 
     def run_and_analyze_stream(self, frame_limit: int=2000) -> None:
         """
@@ -99,7 +107,7 @@ class StreamAnalyzer:
 
 
 if __name__ == '__main__':
-    streamer = StreamAnalyzer(stream_url=CLUSTER_IP)
-    streamer.get_stream_record_frames(500)
+    streamer = StreamAnalyzer()
+    streamer.get_stream_record_frames(100)
     streamer.analyze_stream()
     streamer.video_log.to_csv("two_proccesses.csv")
