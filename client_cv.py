@@ -4,7 +4,7 @@ import time
 from src.streamgear_test import StreamThread
 import json
 
-
+CLUSTER_IP = "http://54.162.253.91:5000/video/stream.m3u8"
 DEFAULT_VIDEO_URL = "http://127.0.0.1:5000/video/stream.m3u8"
 
 """
@@ -99,7 +99,7 @@ class StreamAnalyzer:
 
 
 if __name__ == '__main__':
-    streamer = StreamAnalyzer()
+    streamer = StreamAnalyzer(stream_url=CLUSTER_IP)
     streamer.get_stream_record_frames(500)
     streamer.analyze_stream()
     streamer.video_log.to_csv("two_proccesses.csv")

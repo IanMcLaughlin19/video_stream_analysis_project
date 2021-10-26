@@ -22,6 +22,7 @@ def ping():
 
 @app.route('/video/<string:file_name>')
 def stream(file_name):
+    # TODO: Should make this a relative path os.. Will fix later. Quick fix to make this run in docker
     video_dir = '/opt/build/video'
     return send_from_directory(directory=video_dir, path=file_name)
 

@@ -1,0 +1,11 @@
+Things we wana log in v2
+* Log FPS every minute
+    * Amount of frames received in every minute / 60
+* Log dropped frames
+* Clock drift
+    * max and min clock drift over a minute
+* Try and run for a few hours see what happens
+* Make logging changes first
+* Could put the Fargate/ Task configuration into VCS
+* One click deployment if possible
+
