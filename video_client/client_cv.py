@@ -346,9 +346,9 @@ def main() -> None:
         time.sleep(2)
         stream_analyzer.run_and_analyze_stream(frame_limit=args.frame_limit, outfile=args.outfile)
     except KeyboardInterrupt:
-        stop_task_by_id(task_identifier=args.identifier, cluster_name=args.cluster_name)
+        # stop_task_by_id(task_identifier=args.identifier, cluster_name=args.cluster_name)
         print("Task stopped")
-    stop_task_by_id(task_identifier=args.identifier, cluster_name=args.cluster_name)
+    # stop_task_by_id(task_identifier=args.identifier, cluster_name=args.cluster_name)
     print("Task stopped")
 
 
