@@ -239,6 +239,12 @@ class StreamAnalyzer:
                 except cv2.error:
                     print("Reconnecting due to cv2.error... ")
                     video_capture = cv2.VideoCapture(self.stream_url)
+                    end_loop = time.time()
+                    loop_time = (end_loop - start_loop) * 1000
+                    wait_time = wait_ms - loop_time
+                    if wait_time <= 0:
+                        continue
+                    cv2.waitKey(int(wait_time))
                     continue
                 if limit_frames is not None and frames_recorded_counter > limit_frames:
                     print("Ending frames recording")
