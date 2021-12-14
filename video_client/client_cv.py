@@ -241,6 +241,7 @@ class StreamAnalyzer:
                         end_loop = time.time()
                         loop_time = (end_loop - start_loop) * 1000
                         wait_time = wait_ms - loop_time
+                        print(f"Dropped frame time: {wait_time}")
                         if wait_time <= 0:
                             continue
                         cv2.waitKey(int(wait_time))
