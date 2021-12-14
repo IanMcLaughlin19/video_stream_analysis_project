@@ -231,9 +231,15 @@ class StreamAnalyzer:
         with ThreadPoolExecutor(max_workers=10) as executor:
             while True:
                 start_loop = time.time()
-                ret, frame = video_capture.read()
-                frames_recorded_counter += 1
-                cur_frames += 1
+                try:
+                    ret, frame = video_capture.read()
+                    frames_recorded_counter += 1
+                    cur_frames += 1
+                    print(f"Frame_number: {frames_recorded_counter} ret: {ret}")
+                except cv2.error:
+                    print("Reconnecting due to cv2.error... ")
+                    video_capture = cv2.VideoCapture(self.stream_url)
+                    continue
                 if limit_frames is not None and frames_recorded_counter > limit_frames:
                     print("Ending frames recording")
                     break
