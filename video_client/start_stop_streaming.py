@@ -58,7 +58,7 @@ def start_run_streaming_task(stack_name: str = "streaming", desired_az = "us-eas
     env_var_override = create_aws_dict({"CPU": cpu, "MEMORY": memory, "FPS":fps, "VIDEO_TYPE":video_type, "IMAGE_SIZE":image_size, "ID":identifier})
     container_override = {"cpu": str(cpu), "memory": str(memory)+"GB", "containerOverrides": [{"name": "StreamingCluster", "environment": env_var_override}]}
     run_task_response = ecs_client.run_task(cluster=cluster_name, taskDefinition=task_definition_arn, launchType="FARGATE",
-                        platformVersion="LATEST", networkConfiguration=network_configuration, overrides=container_override)
+                        platformVersion="LATEST", networkConfiguration=network_configuration, overrides=container_override, enableExecuteCommand=True)
     return run_task_response
 
 def create_aws_dict(python_dict: dict, tags: bool=False) -> List[dict]:
