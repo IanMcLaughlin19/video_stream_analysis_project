@@ -237,8 +237,7 @@ class StreamAnalyzer:
                     cur_frames += 1
                     print(f"Frame_number: {frames_recorded_counter} ret: {ret}")
                     if not ret:
-                        print("Reconnecting due to cv2.error... ")
-                        video_capture = cv2.VideoCapture(self.stream_url)
+                        print("Dropped frame")
                         end_loop = time.time()
                         loop_time = (end_loop - start_loop) * 1000
                         wait_time = wait_ms - loop_time
