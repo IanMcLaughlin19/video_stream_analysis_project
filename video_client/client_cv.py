@@ -216,7 +216,7 @@ class StreamAnalyzer:
             self.analysis_number = data + 1
         print(f"Analysis number {self.analysis_number} set")
 
-    def get_stream_record_frames(self, time_limit_minutes: int,  limit_frames: int = None, no_logging: bool = False) -> None:
+    def get_stream_record_frames(self, time_limit_minutes: int=720,  limit_frames: int = None, no_logging: bool = False) -> None:
         """
         This function captures the network stream and records the information it receives into the video log
         :param limit_frames: number of frames to record for until breaking
