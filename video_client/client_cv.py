@@ -216,7 +216,7 @@ class StreamAnalyzer:
             self.analysis_number = data + 1
         print(f"Analysis number {self.analysis_number} set")
 
-    def get_stream_record_frames(self, limit_frames: int = None, no_logging: bool = False) -> None:
+    def get_stream_record_frames(self, time_limit_minutes: int,  limit_frames: int = None, no_logging: bool = False) -> None:
         """
         This function captures the network stream and records the information it receives into the video log
         :param limit_frames: number of frames to record for until breaking
@@ -228,6 +228,7 @@ class StreamAnalyzer:
         time_last_data_record = time.time()
         minute_count = 0
         cur_frames = 0
+        start_time_client = datetime.datetime.now()
         with ThreadPoolExecutor(max_workers=10) as executor:
             while True:
                 start_loop = time.time()
@@ -255,9 +256,13 @@ class StreamAnalyzer:
                         continue
                     cv2.waitKey(int(wait_time))
                     continue
-                if limit_frames is not None and frames_recorded_counter > limit_frames:
-                    print("Ending frames recording")
+                current_time = datetime.datetime.now()
+                if current_time - start_time_client >= datetime.timedelta(minutes=time_limit_minutes):
+                    print(f"Ending frames recording because {time_limit_minutes} has passed")
                     break
+                # if limit_frames is not None and frames_recorded_counter > limit_frames:
+                #     print("Ending frames recording")
+                #     break
                 frame_recorder = FrameRecorder(frame=frame, time=time.time(),
                                                frame_received_counter=frames_recorded_counter,
                                                analysis_number=self.analysis_number)

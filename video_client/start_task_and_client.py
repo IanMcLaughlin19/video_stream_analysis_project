@@ -16,6 +16,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument("-id", "--identifier", help="Provide a tag for the streaming task so it can be easily identified")
     parser.add_argument("-fl", "--frame-limit", type=int, default=200000, help="Provide a specification for how many frames it should record, default is 10,000")
     parser.add_argument("-cn", "--cluster-name", default=DEFAULT_CLUSTER, help="Provide a manual cluster")
+    parser.add_argument("-t", "--time-limit", default=720, help="Provide a time limit in minutes for the frame recording run, default is 720 (12 hours)")
     return parser
 
 def main() -> None:
@@ -24,6 +25,7 @@ def main() -> None:
     streaming_args = copy.copy(args.__dict__)
     del streaming_args['frame_limit']
     del streaming_args['cluster_name']
+    del streaming_args['time_limit']
     streaming = start_run_streaming_task(**streaming_args)
     print("Task started - sleeping for 30 seconds")
     time.sleep(30)
@@ -31,7 +33,7 @@ def main() -> None:
     print("Public IP address found, sleeping another 30")
     time.sleep(40)
     stream_analyzer = StreamAnalyzer(ip_address=public_ecs_address, record_params=True)
-    stream_analyzer.get_stream_record_frames(args.frame_limit)
+    stream_analyzer.get_stream_record_frames(limit_frames=args.frame_limit, time_limit_minutes=args.time_limit)
     stop_task_by_id(task_identifier=args.identifier, cluster_name=args.cluster_name)
 
 
