@@ -10,7 +10,6 @@ from typing import Dict, Tuple
 
 DEFAULT_FRAMERATE = float(os.environ.get("FPS", 25.0))
 DEFAULT_IMAGE_SIZE = 1
-# os.environ['IMAGE_SIZE'] = "10"
 
 IMAGE_SIZE_MAP: Dict[int, Tuple[int, int]] = {
     0: (486, 240),
@@ -40,12 +39,10 @@ def start_stream(framerate: float=DEFAULT_FRAMERATE, output: str="video\\stream.
         qr_code_data = {"frame_number": counter, "time": time.time(), "random": random.random()}
         qr_code = qrcode.make(data=qr_code_data)
         qr_code.save("temp.png")
+        frame = cv2.imread("temp.png")
         if IMAGE_SIZE != DEFAULT_IMAGE_SIZE:
             width, height = IMAGE_DIMENSIONS[0], IMAGE_DIMENSIONS[1]
-            image = Image.open("temp.png")
-            new_image = image.resize((width, height))
-            new_image.save("temp.png")
-        frame = cv2.imread("temp.png")
+            frame = cv2.resize(frame, (width, height))
         streamer.stream(frame)
         key = cv2.waitKey(1)
         if key == ord("q"):
@@ -57,17 +54,6 @@ def start_stream(framerate: float=DEFAULT_FRAMERATE, output: str="video\\stream.
         counter += 1
     streamer.terminate()
 
-class StreamThread(threading.Thread):
-
-    def __init__(self, frame_limit: int = 10000, frame_rate: float=DEFAULT_FRAMERATE):
-        super().__init__()
-        self.frame_limit = frame_limit
-        self.frame_rate = frame_rate
-
-    def run(self) -> None:
-        print("Starting stream")
-        start_stream(framerate=self.frame_rate, stream_frame_limit=self.frame_limit)
-        print("Stream has ended")
 
 if __name__ == '__main__':
     start_stream()
