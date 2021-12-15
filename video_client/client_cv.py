@@ -229,6 +229,7 @@ class StreamAnalyzer:
         minute_count = 0
         cur_frames = 0
         start_time_client = datetime.datetime.now()
+        dropped_frames_count = 0
         with ThreadPoolExecutor(max_workers=10) as executor:
             while True:
                 start_loop = time.time()
@@ -238,6 +239,12 @@ class StreamAnalyzer:
                     cur_frames += 1
                     if not ret:
                         # video_capture = cv2.VideoCapture(self.stream_url)
+                        dropped_frames_count += 1
+                        if dropped_frames_count >= 100:
+                            print("attempting to reconnect to server...")
+                            video_capture = cv2.VideoCapture(self.stream_url)
+                            dropped_frames_count = 0
+                            continue
                         print(f"Dropped frame {frames_recorded_counter} ")
                         end_loop = time.time()
                         loop_time = (end_loop - start_loop) * 1000
