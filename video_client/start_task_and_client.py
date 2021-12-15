@@ -16,7 +16,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument("-id", "--identifier", help="Provide a tag for the streaming task so it can be easily identified")
     parser.add_argument("-fl", "--frame-limit", type=int, default=200000, help="Provide a specification for how many frames it should record, default is 10,000")
     parser.add_argument("-cn", "--cluster-name", default=DEFAULT_CLUSTER, help="Provide a manual cluster")
-    parser.add_argument("-t", "--time-limit", default=720, help="Provide a time limit in minutes for the frame recording run, default is 720 (12 hours)")
+    parser.add_argument("-t", "--time-limit", type=int, default=720, help="Provide a time limit in minutes for the frame recording run, default is 720 (12 hours)")
     return parser
 
 def main() -> None:
