@@ -80,7 +80,7 @@ def create_aws_dict(python_dict: dict, tags: bool=False) -> List[dict]:
         result.append(new_key_pair)
     return result
 
-def get_network_configuration(stack_name: str, desired_az: str = "us-east-1a") -> dict:
+def get_network_configuration(desired_az: str = "us-east-1a") -> dict:
     """
     Gets the network configuration for launching the ECS task on fargate
     :param stack_name: stack name that the fargate cluster is deployed with
@@ -97,7 +97,7 @@ def get_network_configuration(stack_name: str, desired_az: str = "us-east-1a") -
         }
     }
     """
-    result_dict =     network_configuration = {
+    result_dict = {
         'awsvpcConfiguration': {
             'subnets': [],
             'securityGroups': [],
