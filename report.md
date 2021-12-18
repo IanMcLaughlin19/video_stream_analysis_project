@@ -30,7 +30,7 @@ four images sizes - 240p, 480, 720p, and 1080p - and a range of CPU/ Memory conf
 512mb CPU - 2048, and 1GB - 4GB of memory. Our options for hardware configuration were limited by the offerings for the 
 AWS Fargate service [detailed here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html). This came out to 
 60 different configurations total, each of which we ran with a dedicated client writing to their own Sqlite database. We aimed to run
-each configuration for 12 hours each to compare the data after. The list of configurations can be seen below: 
+each configuration for 12 hours each to compare the data after. The raw final data can be found at [final_data.csv](scripts/final_data.csv) The list of configurations can be seen below: 
 
 ```	
 task_id fps	cpu	memory	image_size				
